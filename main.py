@@ -314,8 +314,8 @@ def home_redrawAll(app):
     drawImage(app.backgroundURL, 0, 0, width = app.width, height = app.height)
 
     # draws game title w/ shadow
-    drawLabel('Game Title', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
-    drawLabel('Game Title', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
+    drawLabel('Austin Duck and the Chamber of Quack', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
+    drawLabel('Austin Duck and the Chamber of Quack', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
 
     # draws play game button w/ shadow
     drawLabel('Play Game', app.width / 2, app.height / 2 - 15, size = 45, fill = 'black', font = app.font)
@@ -391,8 +391,8 @@ def play_redrawAll(app):
     drawImage(app.backgroundURL, 0, 0, width = app.width, height = app.height)
 
     if app.state == 'starting':
-        drawLabel("Ready?", app.width/2, app.height/2 + 5, fill='black', size=28, font = app.font)
-        drawLabel("Ready?", app.width/2, app.height/2, fill=app.blueColor, size=28, font = app.font)
+        drawLabel("Ready?", app.width/2, app.height/2 + 5, fill='black', size=50, font = app.font)
+        drawLabel("Ready?", app.width/2, app.height/2, fill=app.blueColor, size=50, font = app.font)
         if app.currentEnemy != None:
             if app.currentEnemy.stage == 1:
                 drawImage(app.sideTA, app.currentEnemy.x, 750,
@@ -431,6 +431,8 @@ def play_redrawAll(app):
             else:
                 drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
                           width=app.currentEnemy.size, height=app.currentEnemy.size)
+            drawLabel(app.currentEnemy.health, app.currentEnemy.x+app.currentEnemy.size//2, 630, align='bottom-left',
+                      font=app.font, size=30, fill='cyan')
         drawSpell(app)
         drawCircle(app.position[0], app.position[1], app.blueR, fill='blue')
         for x, y in app.path:

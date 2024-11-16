@@ -14,6 +14,10 @@ lightningBolt = spells.getLightningBolt()
 tp = spells.getTP()
 duck = spells.getDuck()
 
+# sets background image
+'''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
+app.backgroundURL = 'hogwartsbgTiny.jpeg'
+
 # Michael Reeves: https://www.youtube.com/watch?v=USKD3vPD6ZA&t=726s
 def generateColorMask(img):
     lowerBound = np.array([10, 190, 150])
@@ -171,6 +175,15 @@ def onStep(app):
     
 
 def redrawAll(app):
+    # calculations for proper image positioning
+    imageWidth, imageHeight = getImageSize(app.backgroundURL)
+    widthReduction = imageWidth / app.width
+    imageRealWidth = imageWidth / widthReduction
+    heightReduction = imageHeight / app.height
+    imageRealHeight = imageHeight / heightReduction
+
+    # draws background of game
+    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
 
     if app.state == 'starting':
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)

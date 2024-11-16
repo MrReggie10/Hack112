@@ -26,7 +26,7 @@ def onAppStart(app):
 
     # sets background image
     '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
-    app.backgroundURL = 'hogwartsbg.jpg'
+    app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
 
 

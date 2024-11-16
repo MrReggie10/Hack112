@@ -36,23 +36,69 @@ def capturePosition():
 
     return pos
 
+def restartCast(app):
+    app.casting = True
+
 camera = cv2.VideoCapture(0)
 
 def onAppStart(app):
     app.position = (0, 0, 0)
-    app.casting = True
+    app.state = 'starting'
+    # states:
+    # starting (press a button to start)
+    # calibrating (ensures that the duck is far enough away form the camera)
+    # casting (while the spell is going)
+    # casted (damaging phase)
+    app.calibrationTimer = 0
+    app.castedTimer = 0
+    app.startingTimer = 0
 
 def onStep(app):
-    if app.casting:
-        app.position = capturePosition()
 
-    if app.position[2] > 30:
-        app.casting = False
+    if app.state == 'starting':
+        app.startingTimer += 1
+        if app.startingTimer > 60:
+            app.state = 'calibrating'
+    else:
+        app.startingTimer = 0
+
+    if app.state == 'calibrating':
+        app.position = capturePosition()
+        if app.position[2] > 30 or app.position[2] < 3:
+            app.calibrationTimer = 0
+        else:
+            app.calibrationTimer += 1
+            if app.calibrationTimer > 60:
+                app.state = 'casting'
+
+    if app.state == 'casting':
+        app.position = capturePosition()
+        if app.position[2] > 30:
+            app.state = 'casted'
+
+    if app.state == 'casted':
+        app.castedTimer += 1
+        if app.castedTimer > 60:
+            app.state = 'casting'
+    else:
+        app.castedTimer = 0
 
 def redrawAll(app):
-    if app.casting:
+    if app.state == 'starting':
+        drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
+
+    elif app.state == 'calibrating':
+        if app.position[2] > 30:
+            drawLabel("Too close!", app.width/2, app.height/2, fill='red', size=28)
+        elif app.position[2] < 3:
+            drawLabel("Too far!", app.width/2, app.height/2, fill='red', size=28)
+        else:
+            drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
+
+    elif app.state == 'casting':
         drawCircle(app.position[0], app.position[1], 10, fill='red')
-    else:
+
+    elif app.state == 'casted':
         drawLabel('Casted!', app.width/2, app.height/2, fill='blue', size=56)
 
 def main():

@@ -53,8 +53,33 @@ def capturePosition():
     print(pos)
     return pos
 
-def restartCast(app):
-    app.casting = True
+class Enemy:
+    def __init__(self, stage):
+        self.x = 1300
+        if stage == 1:
+            self.health = 150
+            self.color = 'green'
+            self.size = 50
+        elif stage == 2:
+            self.health = 300
+            self.color = 'black'
+            self.size = 100
+        elif stage == 3:
+            self.health = 800
+            self.color = 'red'
+            self.size = 200
+    def move(self):
+        if self.size == 50:
+            self.x -= 3
+        elif self.size == 100:
+            self.x -= 2
+        elif self.size == 200:
+            self.x -= 0.75
+    def takeDamageReturnIsDead(self, dmg):
+        self.health -= dmg
+        if self.health <= 0:
+            return True
+        return False
 
 camera = cv2.VideoCapture(0)
 
@@ -66,9 +91,12 @@ def onAppStart(app):
     # calibrating (ensures that the duck is far enough away form the camera)
     # casting (while the spell is going)
     # casted (damaging phase)
+    # newStage (between enemies)
+    # win
     app.calibrationTimer = 0
     app.castedTimer = 0
     app.startingTimer = 0
+    app.newStageTimer = 0
 
     app.spellList = ['circle', 'figureEight', 'star', 'lightningBolt', 'tp', 'duck']
     app.currentSpell = chooseSpell(app)
@@ -80,6 +108,9 @@ def onAppStart(app):
     app.castDistance = 40
     app.tooFar = 2
 
+    app.currentEnemy = None
+    app.stage = 1
+
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
     return app.spellList[index]
@@ -87,22 +118,22 @@ def chooseSpell(app):
 def drawSpell(app, opc = 100):
     if app.currentSpell == 'circle':
         drawPolygon(*circle, fill=None, border='red', opacity=opc)
-        drawLabel('Expelliarmus!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('Expelliarmus!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
     elif app.currentSpell == 'figureEight':
         drawPolygon(*figureEight, fill=None, border='red', opacity=opc)
-        drawLabel('Reducto!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('Reducto!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
     elif app.currentSpell == 'star':
         drawPolygon(*star, fill=None, border='red', opacity=opc)
-        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('Wingardium Leviosa!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
     elif app.currentSpell == 'lightningBolt':
         drawPolygon(*lightningBolt, fill=None, border='red', opacity=opc)
-        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('Expecto Patronum!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
     elif app.currentSpell == 'tp':
         drawPolygon(*tp, fill=None, border='red', opacity=opc)
-        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('The Most Terrifying Spell!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
     elif app.currentSpell == 'duck':
         drawPolygon(*duck, fill=None, border='red', opacity=opc)
-        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+        drawLabel('KING!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
 
 def calculateError(app):
     if app.currentSpell == 'circle':
@@ -141,6 +172,7 @@ def onStep(app):
     if app.state == 'starting':
         app.startingTimer += 1
         if app.startingTimer > 60:
+            app.currentEnemy = Enemy(app.stage)
             app.state = 'calibrating'
     else:
         app.startingTimer = 0
@@ -157,6 +189,7 @@ def onStep(app):
     if app.state == 'casting':
         app.position = capturePosition()
         app.path.append((app.position[0], app.position[1]))
+        app.currentEnemy.move()
         if app.position[2] > app.castDistance:
             app.state = 'casted'
 
@@ -165,6 +198,9 @@ def onStep(app):
             app.error = calculateError(app)
             app.currentSpell = chooseSpell(app)
             app.path = []
+            if app.currentEnemy.takeDamageReturnIsDead(app.error):
+                app.currentEnemy = None
+                app.state = 'newStage'
             app.errorCalculated = True
         app.castedTimer += 1
         if app.castedTimer > 60:
@@ -172,6 +208,17 @@ def onStep(app):
             app.errorCalculated = False
     else:
         app.castedTimer = 0
+    
+    if app.state == 'newStage':
+        app.newStageTimer += 1
+        if app.newStageTimer > 60:
+            app.stage += 1
+            if app.stage == 4:
+                app.state = 'win'
+            else:
+                app.state = 'starting'
+    else:
+        app.newStageTimer = 0
     
 
 def redrawAll(app):
@@ -187,6 +234,8 @@ def redrawAll(app):
 
     if app.state == 'starting':
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
+        if app.currentEnemy != None:
+            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
 
     elif app.state == 'calibrating':
         if app.position[2] > app.castDistance:
@@ -195,8 +244,12 @@ def redrawAll(app):
             drawLabel("Too far!", app.width/2, app.height/2, fill='red', size=28)
         else:
             drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
+        if app.currentEnemy != None:
+            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
 
     elif app.state == 'casting':
+        if app.currentEnemy != None:
+            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
         drawSpell(app)
         drawCircle(app.position[0], app.position[1], app.blueR, fill='blue')
         for x, y in app.path:
@@ -205,6 +258,14 @@ def redrawAll(app):
     elif app.state == 'casted':
         drawLabel('Casted!', app.width/2, app.height/2, fill='blue', size=56)
         drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
+        if app.currentEnemy != None:
+            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
+
+    elif app.state == 'newStage':
+        drawLabel('Victory!', app.width/2, app.height/2, fill='yellow', size=56)
+    
+    elif app.state == 'win':
+        drawLabel('You are win!', app.width/2, app.height/2, fill='orange', size=56)
 
 def main():
     runApp(1500, 850)

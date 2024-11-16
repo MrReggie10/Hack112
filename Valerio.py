@@ -20,6 +20,8 @@ def redrawAll(app):
 
 def onMouseMove(app, mouseX, mouseY):
     app.cx, app.cy = mouseX, mouseY
+    dist = calculateError(app)
+    print(dist)
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -27,8 +29,16 @@ def chooseSpell(app):
 
 def drawSpell(app):
     if app.currentSpell == 'circle':
-        drawCircle(app.width/2, app.height/2, 100, fill=None, border='purple')
-        drawLabel('Expelliarmus!', app.width/2, app.height/2, size=16, fill='purple')
+        drawCircle(app.width/2, app.height/2, 100, fill=None, border='red')
+        drawLabel('Expelliarmus!', app.width/2, app.height/2, size=16, fill='red')
+
+def calculateError(app):
+    if app.currentSpell == 'circle':
+        dist = distance(app.cx, app.cy, app.width/2, app.height/2)
+        return dist - 100
+
+def distance(x0, y0, x1, y1):
+    return ((x1-x0)**2 + (y1 - y0)**2)**0.5
 
 def main():
     runApp()

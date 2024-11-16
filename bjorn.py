@@ -34,7 +34,7 @@ def onAppStart(app):
 
 def getRealSize(app, image):
     # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
+    imageWidth, imageHeight = getImageSize(image)
     widthReduction = imageWidth / app.width
     imageRealWidth = imageWidth / widthReduction
     heightReduction = imageHeight / app.height

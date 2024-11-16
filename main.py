@@ -114,6 +114,7 @@ def onAppStart(app):
     app.loseSoundPlayed = False
 
     app.spellList = ['circle', 'figureEight', 'star', 'lightningBolt', 'tp', 'duck']
+    app.currentSpell = None
     app.currentSpell = chooseSpell(app)
     app.path = []
     app.blueR = 30
@@ -168,6 +169,10 @@ def loadSound(relativePath):
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
+    if app.currentSpell == None:
+        return app.spellList[index]
+    while app.spellList[index] == app.currentSpell:
+        index = random.randrange(len(app.spellList))
     return app.spellList[index]
 
 def drawSpell(app, opc = 100):
@@ -249,6 +254,7 @@ def play_onStep(app):
             app.state = 'lose'
         if app.position[2] > app.castDistance:
             app.state = 'casted'
+            app.errorCalculated = False
 
     if app.state == 'casted':
         if not app.errorCalculated:
@@ -413,7 +419,7 @@ def play_redrawAll(app):
 
     elif app.state == 'casted':
         drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
-        drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
+        drawLabel(str(app.error), app.width/2, app.height/2 - 150, size=100, fill='purple')
         if app.currentEnemy != None:
             if app.currentEnemy.stage == 1:
                 drawImage(app.sideTA, app.currentEnemy.x, 750,

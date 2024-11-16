@@ -7,6 +7,10 @@ from Spells import Spell
 spells = Spell()
 circle = spells.getCircle()
 figureEight = spells.getFigureEight()
+star = spells.getStar()
+lightningBolt = spells.getLightningBolt()
+tp = spells.getTP()
+duck = spells.getDuck()
 
 ###Enemies with damage that scales on how well you follow the spell path
 #Objects: enemies ?
@@ -16,7 +20,7 @@ def onAppStart(app):
     app.width = 1500
     app.height = 850
     app.cx, app.cy = 200, 200
-    app.spellList = ['circle', 'figureEight']
+    app.spellList = ['circle', 'figureEight', 'star', 'lightningBolt', 'tp', 'duck']
     app.currentSpell = chooseSpell(app)
     app.path = []
     app.blueR = 15
@@ -51,15 +55,35 @@ def drawSpell(app, opc = 100):
     if app.currentSpell == 'circle':
         drawPolygon(*circle, fill=None, border='red', opacity=opc)
         drawLabel('Expelliarmus!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
-    if app.currentSpell == 'figureEight':
+    elif app.currentSpell == 'figureEight':
         drawPolygon(*figureEight, fill=None, border='red', opacity=opc)
         drawLabel('Reducto!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+    elif app.currentSpell == 'star':
+        drawPolygon(*star, fill=None, border='red', opacity=opc)
+        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+    elif app.currentSpell == 'lightningBolt':
+        drawPolygon(*lightningBolt, fill=None, border='red', opacity=opc)
+        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+    elif app.currentSpell == 'tp':
+        drawPolygon(*tp, fill=None, border='red', opacity=opc)
+        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
+    elif app.currentSpell == 'duck':
+        drawPolygon(*duck, fill=None, border='red', opacity=opc)
+        drawLabel('!', app.width/2, app.height/2, size=16, fill='red', opacity=opc)
 
 def calculateError(app):
     if app.currentSpell == 'circle':
         spell = copy.copy(circle)
     elif app.currentSpell == 'figureEight':
         spell = copy.copy(figureEight)
+    elif app.currentSpell == 'star':
+        spell = copy.copy(star)
+    elif app.currentSpell == 'lightningBolt':
+        spell = copy.copy(lightningBolt)
+    elif app.currentSpell == 'tp':
+        spell = copy.copy(tp)
+    elif app.currentSpell == 'duck':
+        spell = copy.copy(duck)
     totalInCast = 0
     spellCopy = copy.copy(spell)
     while len(spellCopy) >= 2:

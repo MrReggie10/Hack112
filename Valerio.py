@@ -15,6 +15,8 @@ def onAppStart(app):
     app.currentSpell = chooseSpell(app)
     app.error = 0
     app.path = []
+    app.fun = True
+    
 
 def redrawAll(app):
     drawCircle(app.cx, app.cy, 15, fill='blue')

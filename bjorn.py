@@ -8,8 +8,8 @@ def onAppStart(app):
     setActiveScreen('home')
 
     # sets app size
-    app.width = 1000
-    app.height = 600
+    app.width = 1500
+    app.height = 850
 
     # boolean variables, paused and game over, to determine those conditions
     app.paused = False

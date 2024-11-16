@@ -10,5 +10,6 @@ Dependencies:
 - opencv-python
 - numpy
 - cmu_graphics
+- Blacksword font (dafont.com)
 
 Run main.py to play

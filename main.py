@@ -5,6 +5,7 @@ import math, random
 from types import SimpleNamespace
 import copy
 from Spells import Spell
+import os, pathlib
 
 spells = Spell()
 circle = spells.getCircle()
@@ -99,6 +100,7 @@ def onAppStart(app):
     app.castedTimer = 0
     app.startingTimer = 0
     app.newStageTimer = 0
+    app.loseSoundPlayed = False
 
     app.spellList = ['circle', 'figureEight', 'star', 'lightningBolt', 'tp', 'duck']
     app.currentSpell = chooseSpell(app)
@@ -121,6 +123,17 @@ def onAppStart(app):
     # sets background image
     '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
     app.backgroundURL = 'hogwartsbgTiny.jpeg'
+
+    app.voldemortSound = loadSound('voldemort.mp3')
+    app.spellCastSound = loadSound('spellCastSound.wav')
+
+def loadSound(relativePath):
+    # Convert to absolute path (because pathlib.Path only takes absolute paths)
+    absolutePath = os.path.abspath(relativePath) 
+    # Get local file URL
+    url = pathlib.Path(absolutePath).as_uri()
+    # Load Sound file from local URL
+    return Sound(url)
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -208,6 +221,7 @@ def onStep(app):
 
     if app.state == 'casted':
         if not app.errorCalculated:
+            app.spellCastSound.play()
             app.error = calculateError(app)
             app.currentSpell = chooseSpell(app)
             app.path = []
@@ -232,6 +246,13 @@ def onStep(app):
                 app.state = 'starting'
     else:
         app.newStageTimer = 0
+    
+    if app.state == 'lose':
+        if app.loseSoundPlayed == False:
+            app.voldemortSound.play()
+            app.loseSoundPlayed = True
+    else:
+        app.loseSoundPlayed = False
     
 
 

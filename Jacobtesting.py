@@ -32,7 +32,7 @@ def capturePosition():
 
     x, y = computeAveragePosition(mask)
 
-    pos = (x * 1000 // (mask[0].size), y * 600 // (mask[:,0].size), int(np.mean(mask, (0, 1)) * 50))
+    pos = (x * 1500 // (mask[0].size), y * 850 // (mask[:,0].size), int(np.mean(mask, (0, 1)) * 100))
 
     return pos
 
@@ -102,6 +102,6 @@ def redrawAll(app):
         drawLabel('Casted!', app.width/2, app.height/2, fill='blue', size=56)
 
 def main():
-    runApp(1000, 600)
+    runApp(1500, 850)
 
 main()

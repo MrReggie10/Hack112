@@ -70,9 +70,9 @@ class Enemy:
             self.size = 200
     def move(self):
         if self.size == 50:
-            self.x -= 3
-        elif self.size == 100:
             self.x -= 2
+        elif self.size == 100:
+            self.x -= 1.5
         elif self.size == 200:
             self.x -= 0.75
     def takeDamageReturnIsDead(self, dmg):
@@ -110,6 +110,11 @@ def onAppStart(app):
 
     app.currentEnemy = None
     app.stage = 1
+
+    app.sideTA = 'sideTA.jpeg'
+    app.frontTA = 'frontTA.jpeg'
+    app.austin = 'austin.jpeg'
+    app.koz = 'kosbie.jpeg'
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -155,7 +160,7 @@ def calculateError(app):
         x = spellCopy.pop()
         if isInCast(app, x, y):
             totalInCast += 1
-    fractionScore = totalInCast * 100 // (len(spell)/2)
+    fractionScore = int(totalInCast * 100 // (len(spell)/2))
     return fractionScore
 
 def isInCast(app, x, y):
@@ -235,7 +240,14 @@ def redrawAll(app):
     if app.state == 'starting':
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
         if app.currentEnemy != None:
-            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
+            if app.currentEnemy.size == 50:
+                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
+            elif app.currentEnemy.size == 100:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
+            elif app.currentEnemy.size == 200:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'calibrating':
         if app.position[2] > app.castDistance:
@@ -245,27 +257,52 @@ def redrawAll(app):
         else:
             drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
         if app.currentEnemy != None:
-            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
+            if app.currentEnemy.size == 50:
+                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
+            elif app.currentEnemy.size == 100:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
+            elif app.currentEnemy.size == 200:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'casting':
         if app.currentEnemy != None:
-            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
+            if app.currentEnemy.size == 50:
+                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
+            elif app.currentEnemy.size == 100:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
+            elif app.currentEnemy.size == 200:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
         drawSpell(app)
         drawCircle(app.position[0], app.position[1], app.blueR, fill='blue')
         for x, y in app.path:
             drawCircle(x, y, app.blueR, fill='blue', opacity=15)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'casted':
-        drawLabel('Casted!', app.width/2, app.height/2, fill='blue', size=56)
+        drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
         drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
         if app.currentEnemy != None:
-            drawRect(app.currentEnemy.x, 750, app.currentEnemy.size, app.currentEnemy.size, fill=app.currentEnemy.color, align='bottom')
+            if app.currentEnemy.size == 50:
+                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
+            elif app.currentEnemy.size == 100:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
+            elif app.currentEnemy.size == 200:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'newStage':
         drawLabel('Victory!', app.width/2, app.height/2, fill='yellow', size=56)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
     
     elif app.state == 'win':
         drawLabel('You are win!', app.width/2, app.height/2, fill='orange', size=56)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
 def main():
     runApp(1500, 850)

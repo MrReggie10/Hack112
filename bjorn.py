@@ -19,6 +19,8 @@ def onAppStart(app):
     app.titleColor = gradient('yellow', 'orange', start = 'left')
     app.playColor = gradient('yellow', 'orange', start = 'left')
     app.instrColor = gradient('yellow', 'orange', start = 'left')
+    app.resumeColor = gradient('yellow', 'orange', start = 'left')
+    app.backColor = gradient('yellow', 'orange', start = 'left')
 
     # sets game font
     '''Blacksword font is from dafont.com'''
@@ -28,7 +30,16 @@ def onAppStart(app):
     '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
     app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
+    app.backgroundWidth, app.backgroundHeight = getRealSize(app, app.backgroundURL)
 
+def getRealSize(app, image):
+    # calculations for proper image positioning
+    imageWidth, imageHeight = getImageSize(image)
+    widthReduction = imageWidth / app.width
+    imageRealWidth = imageWidth / widthReduction
+    heightReduction = imageHeight / app.height
+    imageRealHeight = imageHeight / heightReduction
+    return imageRealWidth, imageRealHeight
 
 # ============================================================================================================================================================================
 # HOME SCREEN
@@ -36,15 +47,8 @@ def onAppStart(app):
 
 # draws home screen
 def home_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws game title w/ shadow
     drawLabel('Game Title', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
@@ -62,23 +66,25 @@ def home_redrawAll(app):
 def home_onMousePress(app, mouseX, mouseY):
     if home_isTouchingPlay(app, mouseX, mouseY):
         setActiveScreen('play')
+        app.playColor = gradient('yellow', 'orange', start = 'left')
     if home_isTouchingInstr(app, mouseX, mouseY):
         setActiveScreen('instr')
+        app.instrColor = gradient('yellow', 'orange', start = 'left')
 
-# # performs actions on mouse move while on home screen // IGNORE FOR NOW (laggy)
-# def home_onMouseMove(app, mouseX, mouseY):
-#     if home_isTouchingPlay(app, mouseX, mouseY):
-#         app.playColor = 'white'
-#     else:
-#         app.playColor = gradient('yellow', 'orange', start = 'left')
-#     if home_isTouchingInstr(app, mouseX, mouseY):
-#         app.instrColor = 'white'
-#     else:
-#         app.instrColor = gradient('yellow', 'orange', start = 'left')
+# performs actions on mouse move while on home screen // IGNORE FOR NOW (laggy)
+def home_onMouseMove(app, mouseX, mouseY):
+    if home_isTouchingPlay(app, mouseX, mouseY):
+        app.playColor = 'white'
+    else:
+        app.playColor = gradient('yellow', 'orange', start = 'left')
+    if home_isTouchingInstr(app, mouseX, mouseY):
+        app.instrColor = 'white'
+    else:
+        app.instrColor = gradient('yellow', 'orange', start = 'left')
 
 # checks if play button is touched
 def home_isTouchingPlay(app, x, y):
-    return x >= (app.width / 2 - 120) and x <= app.width / 2 + 120 and y <= app.height / 2 + 45 and y >= app.height / 2 - 45
+    return x >= (app.width / 2 - 120) and x <= app.width / 2 + 120 and y <= app.height / 2 + 40 and y >= app.height / 2 - 45
 
 # checks if instructions button is touched
 def home_isTouchingInstr(app, x, y):
@@ -92,15 +98,8 @@ def home_isTouchingInstr(app, x, y):
 
 # draws instructions screen
 def instr_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws title
     drawLabel('Instructions', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
@@ -129,15 +128,8 @@ def instr_onKeyPress(app, key):
 
 # draws play screen
 def play_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws pause menu
     if app.paused:
@@ -151,11 +143,11 @@ def play_redrawAll(app):
 
         # draws resume button
         drawLabel('Resume', app.width / 2, app.height / 2 - 45, size = 45, fill = 'black', font = app.font)
-        drawLabel('Resume', app.width / 2, app.height / 2 - 50, size = 45, fill = app.playColor, font = app.font)
+        drawLabel('Resume', app.width / 2, app.height / 2 - 50, size = 45, fill = app.resumeColor, font = app.font)
 
         # draws back to home button
         drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 55, size = 45, fill = 'black', font = app.font)
-        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 50, size = 45, fill = app.playColor, font = app.font)
+        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 50, size = 45, fill = app.backColor, font = app.font)
 
 # performs conditions if key is pressed while playing game
 def play_onKeyPress(app, key):
@@ -178,6 +170,17 @@ def play_isTouchingResume(app, x, y):
 # checks if user is touching go to home button while paused
 def play_isTouchingGoToHome(app, x, y):
     return x <= app.width / 2 + 180 and x >= app.width / 2 - 180 and y <= app.height / 2 + 85 and y >= app.height / 2 + 25
+
+def play_onMouseMove(app, mouseX, mouseY):
+    if app.paused:
+        if play_isTouchingResume(app, mouseX, mouseY):
+            app.resumeColor = 'white'
+        else:
+            app.resumeColor = gradient('yellow', 'orange', start = 'left')
+        if play_isTouchingGoToHome(app, mouseX, mouseY):
+            app.backColor = 'white'
+        else:
+            app.backColor = gradient('yellow', 'orange', start = 'left')
 
 
 

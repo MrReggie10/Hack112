@@ -207,8 +207,8 @@ def drawSpell(app, opc = 100):
         drawLabel('The Most Terrifying Spell!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'duck':
         drawPolygon(*duck, fill=None, border='red', opacity=opc)
-        drawLabel('KING!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
-        drawLabel('KING!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
+        drawLabel('king!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('king!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
 
 def calculateError(app):
     if app.currentSpell == 'circle':
@@ -454,7 +454,7 @@ def play_redrawAll(app):
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'newStage':
-        drawLabel('Victory!', app.width/2, app.height/2 + 5, fill=app.yellowColor, size=56, font = app.font)
+        drawLabel('Victory!', app.width/2, app.height/2 + 5, fill='black', size=56, font = app.font)
         drawLabel('Victory!', app.width/2, app.height/2, fill=app.yellowColor, size=56, font = app.font)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)

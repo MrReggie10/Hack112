@@ -18,6 +18,18 @@ duck = spells.getDuck()
 '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
 app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
+def getRealSize(app, image):
+    # calculations for proper image positioning
+    imageWidth, imageHeight = getImageSize(image)
+    widthReduction = imageWidth / app.width
+    imageRealWidth = imageWidth / widthReduction
+    heightReduction = imageHeight / app.height
+    imageRealHeight = imageHeight / heightReduction
+    return imageRealHeight, imageRealWidth
+
+app.backgroundWidth, app.backgroundHeight = getRealSize(app, app.backgroundURL)
+
+
 # Michael Reeves: https://www.youtube.com/watch?v=USKD3vPD6ZA&t=726s
 def generateColorMask(img):
     lowerBound = np.array([10, 190, 150])
@@ -115,9 +127,6 @@ def onAppStart(app):
     app.frontTA = 'frontTA.jpeg'
     app.austin = 'austin.jpeg'
     app.koz = 'kosbie.jpeg'
-
-    app.voldemortSound = Sound('voldemort.mp3')
-    app.spellSound = Sound('spellCastSound.wav')
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -229,16 +238,10 @@ def onStep(app):
         app.newStageTimer = 0
     
 
-def redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
 
+def redrawAll(app):
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     if app.state == 'starting':
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
@@ -287,7 +290,6 @@ def redrawAll(app):
     elif app.state == 'casted':
         drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
         drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
-        app.spellSound.play()
         if app.currentEnemy != None:
             if app.currentEnemy.size == 50:
                 drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')

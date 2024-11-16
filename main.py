@@ -154,6 +154,12 @@ def onAppStart(app):
     app.instrColor = gradient('yellow', 'orange', start = 'left')
     app.resumeColor = gradient('yellow', 'orange', start = 'left')
     app.backColor = gradient('yellow', 'orange', start = 'left')
+    app.redColor = gradient(rgb(157, 2, 8), rgb(208, 0, 0), start = 'left')
+    app.blueColor = gradient(rgb(0, 150, 199), rgb(0, 180, 216), start = 'left')
+    app.greenColor = gradient(rgb(56, 176, 0), rgb(112, 224, 0), start = 'left')
+    app.orangeColor = gradient(rgb(255, 136, 0), rgb(255, 170, 0), start = 'left')
+    app.yellowColor = gradient('yellow', 'orange', start = 'left')
+    app.purpleColor = gradient(rgb(123, 44, 191), rgb(60, 9, 108), start = 'left')
 
     # sets game font
     '''Blacksword font is from dafont.com'''
@@ -180,22 +186,28 @@ def chooseSpell(app):
 def drawSpell(app, opc = 100):
     if app.currentSpell == 'circle':
         drawPolygon(*circle, fill=None, border='red', opacity=opc)
-        drawLabel('Expelliarmus!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('Expelliarmus!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('Expelliarmus!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'figureEight':
         drawPolygon(*figureEight, fill=None, border='red', opacity=opc)
-        drawLabel('Reducto!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('Reducto!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('Reducto!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'star':
         drawPolygon(*star, fill=None, border='red', opacity=opc)
-        drawLabel('Wingardium Leviosa!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('Wingardium Leviosa!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('Wingardium Leviosa!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'lightningBolt':
         drawPolygon(*lightningBolt, fill=None, border='red', opacity=opc)
-        drawLabel('Expecto Patronum!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('Expecto Patronum!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('Expecto Patronum!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'tp':
         drawPolygon(*tp, fill=None, border='red', opacity=opc)
-        drawLabel('The Most Terrifying Spell!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('The Most Terrifying Spell!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('The Most Terrifying Spell!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
     elif app.currentSpell == 'duck':
         drawPolygon(*duck, fill=None, border='red', opacity=opc)
-        drawLabel('KING!', app.width/2, app.height*(3/4), size=40, fill='red', opacity=opc)
+        drawLabel('KING!', app.width/2, app.height*(3/4) + 5, size=40, fill='black', opacity=opc, font = app.font)
+        drawLabel('KING!', app.width/2, app.height*(3/4), size=40, fill=app.redColor, opacity=opc, font = app.font)
 
 def calculateError(app):
     if app.currentSpell == 'circle':
@@ -378,7 +390,8 @@ def play_redrawAll(app):
     drawImage(app.backgroundURL, 0, 0, width = app.width, height = app.height)
 
     if app.state == 'starting':
-        drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
+        drawLabel("Ready?", app.width/2, app.height/2 + 5, fill='black', size=28, font = app.font)
+        drawLabel("Ready?", app.width/2, app.height/2, fill=app.blueColor, size=28, font = app.font)
         if app.currentEnemy != None:
             if app.currentEnemy.stage == 1:
                 drawImage(app.sideTA, app.currentEnemy.x, 750,
@@ -391,11 +404,14 @@ def play_redrawAll(app):
 
     elif app.state == 'calibrating':
         if app.position[2] > app.castDistance:
-            drawLabel("Too close!", app.width/2, app.height/2, fill='red', size=28)
+            drawLabel("Too close!", app.width/2, app.height/2 + 5, fill='black', size=50, font = app.font)
+            drawLabel("Too close!", app.width/2, app.height/2, fill=app.redColor, size=50, font = app.font)
         elif app.position[2] < app.tooFar:
-            drawLabel("Too far!", app.width/2, app.height/2, fill='red', size=28)
+            drawLabel("Too far!", app.width/2, app.height/2 + 5, fill='black', size=50, font = app.font)
+            drawLabel("Too far!", app.width/2, app.height/2, fill=app.redColor, size=50, font = app.font)
         else:
-            drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
+            drawLabel("Perfect!", app.width/2, app.height/2 + 5, fill='black', size=50, font = app.font)
+            drawLabel("Perfect!", app.width/2, app.height/2, fill=app.greenColor, size=50, font = app.font)
         if app.currentEnemy != None:
             if app.currentEnemy.stage == 1:
                 drawImage(app.sideTA, app.currentEnemy.x, 750,
@@ -422,8 +438,10 @@ def play_redrawAll(app):
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'casted':
-        drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
-        drawLabel(str(app.error), app.width/2, app.height/2 - 150, size=100, fill='purple')
+        drawLabel('Cast!', app.width/2, app.height/2 + 5, fill='black', size=56, font = app.font)
+        drawLabel('Cast!', app.width/2, app.height/2, fill=app.blueColor, size=56, font = app.font)
+        drawLabel(str(app.error), app.width/2, app.height/2 - 145, size=100, fill='black', font = app.font)
+        drawLabel(str(app.error), app.width/2, app.height/2 - 150, size=100, fill=app.purpleColor, font = app.font)
         if app.currentEnemy != None:
             if app.currentEnemy.stage == 1:
                 drawImage(app.sideTA, app.currentEnemy.x, 750,
@@ -435,17 +453,20 @@ def play_redrawAll(app):
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'newStage':
-        drawLabel('Victory!', app.width/2, app.height/2, fill='yellow', size=56)
+        drawLabel('Victory!', app.width/2, app.height/2 + 5, fill=app.yellowColor, size=56, font = app.font)
+        drawLabel('Victory!', app.width/2, app.height/2, fill=app.yellowColor, size=56, font = app.font)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
     
     elif app.state == 'win':
-        drawLabel('You are win!', app.width/2, app.height/2, fill='orange', size=56)
+        drawLabel('You are win!', app.width/2, app.height/2 + 5, fill='black', size=56, font = app.font)
+        drawLabel('You are win!', app.width/2, app.height/2, fill=app.orangeColor, size=56, font = app.font)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
     
     elif app.state == 'lose':
-        drawLabel('Game over :(', app.width/2, app.height/2, fill='orange', size=56)
+        drawLabel('Game over :(', app.width/2, app.height/2 + 5, fill='black', size=80, font = app.font)
+        drawLabel('Game over :(', app.width/2, app.height/2, fill=app.orangeColor, size=80, font = app.font)
 
     elif app.state == 'paused':
 

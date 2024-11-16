@@ -138,6 +138,8 @@ def onAppStart(app):
 
     app.voldemortSound = loadSound('voldemort.mp3')
     app.spellCastSound = loadSound('spellCastSound.wav')
+    app.robloxDeath = loadSound('robloxDeath.mp3')
+    app.victorySound = loadSound('victorySound.mp3')
 
     # sets active screen to home screen
     setActiveScreen('home')
@@ -279,8 +281,10 @@ def play_onStep(app):
             app.stage += 1
             if app.stage == 4:
                 app.state = 'win'
+                app.victorySound.play()
             else:
                 app.state = 'starting'
+                app.robloxDeath.play()
     else:
         app.newStageTimer = 0
     

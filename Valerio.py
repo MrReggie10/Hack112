@@ -2,10 +2,11 @@ from cmu_graphics import *
 import math, random
 from types import SimpleNamespace
 import copy
-from Spells import getCircle, getFigureEight
+from Spells import Spell
 
-circle = getCircle()
-figureEight = getFigureEight()
+spells = Spell()
+circle = spells.getCircle()
+figureEight = spells.getFigureEight()
 
 ###Enemies with damage that scales on how well you follow the spell path
 #Objects: enemies ?

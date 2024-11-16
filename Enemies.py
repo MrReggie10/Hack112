@@ -26,20 +26,6 @@ def onAppStart(app):
     app.austin = 'austin.jpeg'
     app.koz = 'kosbie.jpeg'
 
-    app.sideWidth, app.sideHeight = getRealSize(app, app.sideTA)
-    app.frontWidth, app.frontHeight = getRealSize(app, app.frontTA)
-
-    app.sideX = 1300
-
-def getRealSize(app, image):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(image)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-    return imageRealWidth, imageRealHeight
-
 def onStep(app):
     for enemy in app.enemies:
         enemy.move()

@@ -19,6 +19,8 @@ def onAppStart(app):
     app.titleColor = gradient('yellow', 'orange', start = 'left')
     app.playColor = gradient('yellow', 'orange', start = 'left')
     app.instrColor = gradient('yellow', 'orange', start = 'left')
+    app.resumeColor = gradient('yellow', 'orange', start = 'left')
+    app.backColor = gradient('yellow', 'orange', start = 'left')
 
     # sets game font
     '''Blacksword font is from dafont.com'''
@@ -62,23 +64,25 @@ def home_redrawAll(app):
 def home_onMousePress(app, mouseX, mouseY):
     if home_isTouchingPlay(app, mouseX, mouseY):
         setActiveScreen('play')
+        app.playColor = gradient('yellow', 'orange', start = 'left')
     if home_isTouchingInstr(app, mouseX, mouseY):
         setActiveScreen('instr')
+        app.instrColor = gradient('yellow', 'orange', start = 'left')
 
-# # performs actions on mouse move while on home screen // IGNORE FOR NOW (laggy)
-# def home_onMouseMove(app, mouseX, mouseY):
-#     if home_isTouchingPlay(app, mouseX, mouseY):
-#         app.playColor = 'white'
-#     else:
-#         app.playColor = gradient('yellow', 'orange', start = 'left')
-#     if home_isTouchingInstr(app, mouseX, mouseY):
-#         app.instrColor = 'white'
-#     else:
-#         app.instrColor = gradient('yellow', 'orange', start = 'left')
+# performs actions on mouse move while on home screen // IGNORE FOR NOW (laggy)
+def home_onMouseMove(app, mouseX, mouseY):
+    if home_isTouchingPlay(app, mouseX, mouseY):
+        app.playColor = 'white'
+    else:
+        app.playColor = gradient('yellow', 'orange', start = 'left')
+    if home_isTouchingInstr(app, mouseX, mouseY):
+        app.instrColor = 'white'
+    else:
+        app.instrColor = gradient('yellow', 'orange', start = 'left')
 
 # checks if play button is touched
 def home_isTouchingPlay(app, x, y):
-    return x >= (app.width / 2 - 120) and x <= app.width / 2 + 120 and y <= app.height / 2 + 45 and y >= app.height / 2 - 45
+    return x >= (app.width / 2 - 120) and x <= app.width / 2 + 120 and y <= app.height / 2 + 40 and y >= app.height / 2 - 45
 
 # checks if instructions button is touched
 def home_isTouchingInstr(app, x, y):
@@ -151,11 +155,11 @@ def play_redrawAll(app):
 
         # draws resume button
         drawLabel('Resume', app.width / 2, app.height / 2 - 45, size = 45, fill = 'black', font = app.font)
-        drawLabel('Resume', app.width / 2, app.height / 2 - 50, size = 45, fill = app.playColor, font = app.font)
+        drawLabel('Resume', app.width / 2, app.height / 2 - 50, size = 45, fill = app.resumeColor, font = app.font)
 
         # draws back to home button
         drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 55, size = 45, fill = 'black', font = app.font)
-        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 50, size = 45, fill = app.playColor, font = app.font)
+        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 50, size = 45, fill = app.backColor, font = app.font)
 
 # performs conditions if key is pressed while playing game
 def play_onKeyPress(app, key):
@@ -178,6 +182,17 @@ def play_isTouchingResume(app, x, y):
 # checks if user is touching go to home button while paused
 def play_isTouchingGoToHome(app, x, y):
     return x <= app.width / 2 + 180 and x >= app.width / 2 - 180 and y <= app.height / 2 + 85 and y >= app.height / 2 + 25
+
+def play_onMouseMove(app, mouseX, mouseY):
+    if app.paused:
+        if play_isTouchingResume(app, mouseX, mouseY):
+            app.resumeColor = 'white'
+        else:
+            app.resumeColor = gradient('yellow', 'orange', start = 'left')
+        if play_isTouchingGoToHome(app, mouseX, mouseY):
+            app.backColor = 'white'
+        else:
+            app.backColor = gradient('yellow', 'orange', start = 'left')
 
 
 

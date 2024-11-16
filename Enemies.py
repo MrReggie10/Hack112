@@ -1,22 +1,38 @@
 from cmu_graphics import *
 
 class Enemy:
-    def __init__(self, health):
+    def __init__(self, stage):
         self.x = 1300
-        self.health = health
-        self.size =  .2 * health if health != 2500 else 200
+        self.stage = stage
+        if stage == 1:
+            self.health = 150
+            self.color = 'green'
+            self.size = 100
+        elif stage == 2:
+            self.health = 300
+            self.color = 'black'
+            self.size = 200
+        elif stage == 3:
+            self.health = 800
+            self.color = 'red'
+            self.size = 300
     def move(self):
-        if self.size == 50:
-            self.x -= 3
-        elif self.size == 100:
+        if self.stage == 1:
             self.x -= 2
-        elif self.size == 200:
+        elif self.stage == 2:
+            self.x -= 1.5
+        elif self.stage == 3:
             self.x -= 0.75
+    def takeDamageReturnIsDead(self, dmg):
+        self.health -= dmg
+        if self.health <= 0:
+            return True
+        return False
 
 def onAppStart(app):
     app.width = 1500
     app.height = 850
-    app.enemies = [Enemy(2500), Enemy(500), Enemy(250)]
+    app.enemies = [Enemy(1), Enemy(2), Enemy(3)]
 
     app.sideTA = 'sideTA.jpeg'
     app.frontTA = 'frontTA.jpeg'
@@ -31,13 +47,11 @@ def redrawAll(app):
     drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
     drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
     for enemy in app.enemies:
-        if enemy.size == 50:
-            drawImage(app.sideTA, enemy.x, 750, width=100, height=100, align='bottom')
-        elif enemy.size == 100:
-            drawImage(app.frontTA, enemy.x, 750, align='bottom', width=150, height=200)
-        elif enemy.size == 200:
-            drawImage(app.frontTA, enemy.x, 750, align='bottom', width=300, height=300)
-        
+        if enemy.stage == 1:
+            drawImage(app.sideTA, enemy.x, 750, align='bottom-left', width=enemy.size, height=enemy.size, )
+        else:
+            drawImage(app.frontTA, enemy.x, 750, align='bottom-left', width=enemy.size, height=enemy.size)
+
 def main():
     runApp()
 main()

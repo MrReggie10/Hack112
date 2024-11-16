@@ -11,6 +11,10 @@ def onAppStart(app):
     app.width = 1000
     app.height = 600
 
+    # boolean variables, paused and game over, to determine those conditions
+    app.paused = False
+    app.gameOver = False
+
     # initializing text color
     app.titleColor = gradient('yellow', 'orange', start = 'left')
     app.playColor = gradient('yellow', 'orange', start = 'left')
@@ -43,8 +47,8 @@ def home_redrawAll(app):
     drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
 
     # draws game title w/ shadow
-    drawLabel('Game Title Here', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
-    drawLabel('Game Title Here', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
+    drawLabel('Game Title', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
+    drawLabel('Game Title', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
 
     # draws play game button w/ shadow
     drawLabel('Play Game', app.width / 2, app.height / 2 - 15, size = 45, fill = 'black', font = app.font)
@@ -90,10 +94,8 @@ def home_isTouchingInstr(app, x, y):
 def instr_redrawAll(app):
     # calculations for proper image positioning
     imageWidth, imageHeight = getImageSize(app.backgroundURL)
-
     widthReduction = imageWidth / app.width
     imageRealWidth = imageWidth / widthReduction
-
     heightReduction = imageHeight / app.height
     imageRealHeight = imageHeight / heightReduction
 
@@ -103,6 +105,16 @@ def instr_redrawAll(app):
     # draws title
     drawLabel('Instructions', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
     drawLabel('Instructions', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
+
+    # draws instructions
+    drawLabel('1) To cast spells, ...', app.width / 2, app.height / 2 - 55, size = 45, fill = 'black', font = app.font)
+    drawLabel('1) To cast spells, ...', app.width / 2, app.height / 2 - 60, size = 45, fill = app.instrColor, font = app.font)
+
+    drawLabel('2) To pause the game, press escape', app.width / 2, app.height / 2 + 20, size = 45, fill = 'black', font = app.font)
+    drawLabel('2) To pause the game, press escape', app.width / 2, app.height / 2 + 15, size = 45, fill = app.instrColor, font = app.font)
+
+    drawLabel('3) To exit this screen, press escape', app.width / 2, app.height / 2 + 95, size = 45, fill = 'black', font = app.font)
+    drawLabel('3) To exit this screen, press escape', app.width / 2, app.height / 2 + 90, size = 45, fill = app.instrColor, font = app.font)
 
 # performs actions on key press in instructions screen
 def instr_onKeyPress(app, key):
@@ -119,18 +131,54 @@ def instr_onKeyPress(app, key):
 def play_redrawAll(app):
     # calculations for proper image positioning
     imageWidth, imageHeight = getImageSize(app.backgroundURL)
-
     widthReduction = imageWidth / app.width
     imageRealWidth = imageWidth / widthReduction
-
     heightReduction = imageHeight / app.height
     imageRealHeight = imageHeight / heightReduction
 
     # draws background of game
     drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
 
-    drawLabel('Play screen', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
-    drawLabel('Play screen', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
+    # draws pause menu
+    if app.paused:
+        # draws box
+        drawRect(0, 0, app.width, app.height, fill = 'white', opacity = 50)
+        drawRect(app.width / 2 - 200, app.height / 2 - 100, 400, 200, fill = 'black', opacity = 75, border = 'black')
+
+        # draws title
+        drawLabel('Paused', app.width / 2, app.height / 2 - 145, size = 55, fill = 'black', font = app.font)
+        drawLabel('Paused', app.width / 2, app.height / 2 - 150, size = 55, fill = app.playColor, font = app.font)
+
+        # draws resume button
+        drawLabel('Resume', app.width / 2, app.height / 2 - 45, size = 45, fill = 'black', font = app.font)
+        drawLabel('Resume', app.width / 2, app.height / 2 - 50, size = 45, fill = app.playColor, font = app.font)
+
+        # draws back to home button
+        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 55, size = 45, fill = 'black', font = app.font)
+        drawLabel('Go Back to Home', app.width / 2, app.height / 2 + 50, size = 45, fill = app.playColor, font = app.font)
+
+# performs conditions if key is pressed while playing game
+def play_onKeyPress(app, key):
+    if key == 'escape':
+        app.paused = True
+
+# performs conditions if mouse is pressed while playing game
+def play_onMousePress(app, mouseX, mouseY):
+    if app.paused:
+        if play_isTouchingResume(app, mouseX, mouseY):
+            app.paused = False
+        elif play_isTouchingGoToHome(app, mouseX, mouseY):
+            app.paused = False
+            setActiveScreen('home')
+        
+# checks if user is touching resume button while paused
+def play_isTouchingResume(app, x, y):
+    return x <= app.width / 2 + 80 and x >= app.width / 2 - 80 and y <= app.height / 2 - 15 and y >= app.height / 2 - 75
+
+# checks if user is touching go to home button while paused
+def play_isTouchingGoToHome(app, x, y):
+    return x <= app.width / 2 + 180 and x >= app.width / 2 - 180 and y <= app.height / 2 + 85 and y >= app.height / 2 + 25
+
 
 
 # ============================================================================================================================================================================

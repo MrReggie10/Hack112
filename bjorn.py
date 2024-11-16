@@ -11,9 +11,10 @@ def onAppStart(app):
     app.width = 1500
     app.height = 850
 
-    # boolean variables, paused and game over, to determine those conditions
+    # boolean variables, paused, playing game, and game over, to determine those conditions
     app.paused = False
     app.gameOver = False
+    app.playingGame = False
 
     # initializing text color
     app.titleColor = gradient('yellow', 'orange', start = 'left')
@@ -66,12 +67,13 @@ def home_redrawAll(app):
 def home_onMousePress(app, mouseX, mouseY):
     if home_isTouchingPlay(app, mouseX, mouseY):
         setActiveScreen('play')
+        app.playingGame == True
         app.playColor = gradient('yellow', 'orange', start = 'left')
     if home_isTouchingInstr(app, mouseX, mouseY):
         setActiveScreen('instr')
         app.instrColor = gradient('yellow', 'orange', start = 'left')
 
-# performs actions on mouse move while on home screen // IGNORE FOR NOW (laggy)
+# performs actions on mouse move while on home screen
 def home_onMouseMove(app, mouseX, mouseY):
     if home_isTouchingPlay(app, mouseX, mouseY):
         app.playColor = 'white'
@@ -106,8 +108,10 @@ def instr_redrawAll(app):
     drawLabel('Instructions', app.width / 2, app.height / 5, size = 75, fill = app.titleColor, font = app.font)
 
     # draws instructions
-    drawLabel('1) To cast spells, ...', app.width / 2, app.height / 2 - 55, size = 45, fill = 'black', font = app.font)
-    drawLabel('1) To cast spells, ...', app.width / 2, app.height / 2 - 60, size = 45, fill = app.instrColor, font = app.font)
+    drawLabel('1) To cast spells, move the duck to an appropriate distance from the screen,', app.width / 2, app.height / 2 - 130, size = 45, fill = 'black', font = app.font)
+    drawLabel('1) To cast spells, move the duck to an appropriate distance from the screen,', app.width / 2, app.height / 2 - 135, size = 45, fill = app.instrColor, font = app.font)
+    drawLabel(' then trace the outline of the spell, and cast the spell by pushing the duck forward', app.width / 2, app.height / 2 - 55, size = 45, fill = 'black', font = app.font)
+    drawLabel(' then trace the outline of the spell, and cast the spell by pushing the duck forward', app.width / 2, app.height / 2 - 60, size = 45, fill = app.instrColor, font = app.font)
 
     drawLabel('2) To pause the game, press escape', app.width / 2, app.height / 2 + 20, size = 45, fill = 'black', font = app.font)
     drawLabel('2) To pause the game, press escape', app.width / 2, app.height / 2 + 15, size = 45, fill = app.instrColor, font = app.font)
@@ -160,6 +164,7 @@ def play_onMousePress(app, mouseX, mouseY):
         if play_isTouchingResume(app, mouseX, mouseY):
             app.paused = False
         elif play_isTouchingGoToHome(app, mouseX, mouseY):
+            app.playingGame = False
             app.paused = False
             setActiveScreen('home')
         
@@ -171,6 +176,7 @@ def play_isTouchingResume(app, x, y):
 def play_isTouchingGoToHome(app, x, y):
     return x <= app.width / 2 + 180 and x >= app.width / 2 - 180 and y <= app.height / 2 + 85 and y >= app.height / 2 + 25
 
+# performs actions on mouse move while playing game
 def play_onMouseMove(app, mouseX, mouseY):
     if app.paused:
         if play_isTouchingResume(app, mouseX, mouseY):

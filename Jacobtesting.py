@@ -105,3 +105,86 @@ def main():
     runApp(1500, 850)
 
 main()
+
+
+
+
+
+
+
+
+
+
+def redrawAll(app):
+    # draws background of game
+    drawImage(app.backgroundURL, 0, 0, width = app.width, height = app.height)
+
+    if app.state == 'starting':
+        drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
+        if app.currentEnemy != None:
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+
+    elif app.state == 'calibrating':
+        if app.position[2] > app.castDistance:
+            drawLabel("Too close!", app.width/2, app.height/2, fill='red', size=28)
+        elif app.position[2] < app.tooFar:
+            drawLabel("Too far!", app.width/2, app.height/2, fill='red', size=28)
+        else:
+            drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
+        if app.currentEnemy != None:
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+
+    elif app.state == 'casting':
+        if app.currentEnemy != None:
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
+        drawSpell(app)
+        drawCircle(app.position[0], app.position[1], app.blueR, fill='blue')
+        for x, y in app.path:
+            drawCircle(x, y, app.blueR, fill='blue', opacity=15)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+
+    elif app.state == 'casted':
+        drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
+        drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
+        if app.currentEnemy != None:
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+
+    elif app.state == 'newStage':
+        drawLabel('Victory!', app.width/2, app.height/2, fill='yellow', size=56)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+    
+    elif app.state == 'win':
+        drawLabel('You are win!', app.width/2, app.height/2, fill='orange', size=56)
+        drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+        drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+    
+    elif app.state == 'lose':
+        drawLabel('Game over :(', app.width/2, app.height/2, fill='orange', size=56)

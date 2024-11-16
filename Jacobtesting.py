@@ -30,9 +30,6 @@ def capturePosition():
     frameReversed = frame[:, ::-1]
     mask = generateColorMask(frameReversed)
 
-    cv2.imshow('lol', frameReversed)
-    cv2.imshow('WIZARD', mask)
-
     x, y = computeAveragePosition(mask)
 
     pos = (x * 1000 // (mask[0].size), y * 600 // (mask[:,0].size), int(np.mean(mask, (0, 1)) * 50))

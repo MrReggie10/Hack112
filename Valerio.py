@@ -23,7 +23,7 @@ def redrawAll(app):
     drawSpell(app)
     drawLabel(f'{app.error}', app.width/6, app.height/6)
     for x, y in app.path:
-        drawCircle(x, y, 15, fill='blue', opacity=50)
+        drawCircle(x, y, 15, fill='blue', opacity=15)
 
 def onMouseMove(app, mouseX, mouseY):
     app.cx, app.cy = mouseX, mouseY

@@ -287,6 +287,7 @@ def redrawAll(app):
     elif app.state == 'casted':
         drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
         drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
+        app.spellSound.play()
         if app.currentEnemy != None:
             if app.currentEnemy.size == 50:
                 drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')

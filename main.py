@@ -136,6 +136,7 @@ def onAppStart(app):
     '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
     app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
+    # The sounds are from https://www.myinstants.com/
     app.voldemortSound = loadSound('voldemort.mp3')
     app.spellCastSound = loadSound('spellCastSound.wav')
     app.robloxDeath = loadSound('robloxDeath.mp3')

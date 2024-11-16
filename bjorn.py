@@ -30,7 +30,16 @@ def onAppStart(app):
     '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
     app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
+    app.backgroundWidth, app.backgroundHeight = getRealSize(app, app.backgroundURL)
 
+def getRealSize(app, image):
+    # calculations for proper image positioning
+    imageWidth, imageHeight = getImageSize(app.backgroundURL)
+    widthReduction = imageWidth / app.width
+    imageRealWidth = imageWidth / widthReduction
+    heightReduction = imageHeight / app.height
+    imageRealHeight = imageHeight / heightReduction
+    return imageRealWidth, imageRealHeight
 
 # ============================================================================================================================================================================
 # HOME SCREEN
@@ -38,15 +47,8 @@ def onAppStart(app):
 
 # draws home screen
 def home_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws game title w/ shadow
     drawLabel('Game Title', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
@@ -96,15 +98,8 @@ def home_isTouchingInstr(app, x, y):
 
 # draws instructions screen
 def instr_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws title
     drawLabel('Instructions', app.width / 2, app.height / 5 + 5, size = 75, fill = 'black', font = app.font)
@@ -133,15 +128,8 @@ def instr_onKeyPress(app, key):
 
 # draws play screen
 def play_redrawAll(app):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(app.backgroundURL)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = imageRealWidth, height = imageRealHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
 
     # draws pause menu
     if app.paused:

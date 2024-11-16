@@ -46,6 +46,7 @@ def capturePosition():
 
     pos = (x * 1500 // (mask[0].size), y * 850 // (mask[:,0].size), int(np.mean(mask, (0, 1)) * 100))
 
+    print(pos)
     return pos
 
 def restartCast(app):
@@ -68,11 +69,12 @@ def onAppStart(app):
     app.spellList = ['circle', 'figureEight', 'star', 'lightningBolt', 'tp', 'duck']
     app.currentSpell = chooseSpell(app)
     app.path = []
-    app.blueR = 15
-    app.steps = 0
+    app.blueR = 30
     app.stage = 'preparing'
     app.error = 0
     app.errorCalculated = False
+    app.castDistance = 40
+    app.tooFar = 2
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -118,7 +120,7 @@ def calculateError(app):
         x = spellCopy.pop()
         if isInCast(app, x, y):
             totalInCast += 1
-    fractionScore = totalInCast / (len(spell)/2)
+    fractionScore = totalInCast * 100 // (len(spell)/2)
     return fractionScore
 
 def isInCast(app, x, y):
@@ -141,7 +143,7 @@ def onStep(app):
 
     if app.state == 'calibrating':
         app.position = capturePosition()
-        if app.position[2] > 30 or app.position[2] < 3:
+        if app.position[2] > app.castDistance or app.position[2] < app.tooFar:
             app.calibrationTimer = 0
         else:
             app.calibrationTimer += 1
@@ -151,7 +153,7 @@ def onStep(app):
     if app.state == 'casting':
         app.position = capturePosition()
         app.path.append((app.position[0], app.position[1]))
-        if app.position[2] > 30:
+        if app.position[2] > app.castDistance:
             app.state = 'casted'
 
     if app.state == 'casted':
@@ -174,9 +176,9 @@ def redrawAll(app):
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
 
     elif app.state == 'calibrating':
-        if app.position[2] > 30:
+        if app.position[2] > app.castDistance:
             drawLabel("Too close!", app.width/2, app.height/2, fill='red', size=28)
-        elif app.position[2] < 3:
+        elif app.position[2] < app.tooFar:
             drawLabel("Too far!", app.width/2, app.height/2, fill='red', size=28)
         else:
             drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
@@ -189,9 +191,7 @@ def redrawAll(app):
 
     elif app.state == 'casted':
         drawLabel('Casted!', app.width/2, app.height/2, fill='blue', size=56)
-        count = math.floor((-1/30)*(app.steps-180) + 7)
-        drawLabel(str(count), app.width/2, app.height/2, size=100, fill='purple')
-        drawLabel(str(app.error), app.width/2, app.height*(3/4), size=100, fill='purple')
+        drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
 
 def main():
     runApp(1500, 850)

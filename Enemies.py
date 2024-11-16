@@ -1,5 +1,4 @@
 from cmu_graphics import *
-import math
 
 class Enemy:
     def __init__(self, health):
@@ -18,9 +17,7 @@ def onAppStart(app):
     app.width = 1500
     app.height = 850
     app.enemies = [Enemy(2500), Enemy(500), Enemy(250)]
-    # app.enemy = Enemy(500, 'black')
-    # app.enemy2 = Enemy(1000, 'red')
-    # app.enemy3 = Enemy(250, 'green')
+
     app.sideTA = 'sideTA.jpeg'
     app.frontTA = 'frontTA.jpeg'
     app.austin = 'austin.jpeg'
@@ -31,8 +28,8 @@ def onStep(app):
         enemy.move()
 
 def redrawAll(app):
-    drawImage(app.austin, 100, 750, align='bottom', width=200, height=200)
-    drawImage(app.koz, 40, 650, align='bottom', width=75, height=75)
+    drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
+    drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
     for enemy in app.enemies:
         if enemy.size == 50:
             drawImage(app.sideTA, enemy.x, 750, width=100, height=100, align='bottom')

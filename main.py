@@ -116,6 +116,9 @@ def onAppStart(app):
     app.austin = 'austin.jpeg'
     app.koz = 'kosbie.jpeg'
 
+    app.voldemortSound = Sound('voldemort.mp3')
+    app.spellSound = Sound('spellCastSound.wav')
+
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
     return app.spellList[index]

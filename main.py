@@ -14,20 +14,9 @@ lightningBolt = spells.getLightningBolt()
 tp = spells.getTP()
 duck = spells.getDuck()
 
-# sets background image
-'''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
-app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
-def getRealSize(app, image):
-    # calculations for proper image positioning
-    imageWidth, imageHeight = getImageSize(image)
-    widthReduction = imageWidth / app.width
-    imageRealWidth = imageWidth / widthReduction
-    heightReduction = imageHeight / app.height
-    imageRealHeight = imageHeight / heightReduction
-    return imageRealHeight, imageRealWidth
 
-app.backgroundWidth, app.backgroundHeight = getRealSize(app, app.backgroundURL)
+
 
 
 # Michael Reeves: https://www.youtube.com/watch?v=USKD3vPD6ZA&t=726s
@@ -62,30 +51,30 @@ def capturePosition():
 
     pos = (x * 1500 // (mask[0].size), y * 850 // (mask[:,0].size), int(np.mean(mask, (0, 1)) * 100))
 
-    print(pos)
     return pos
 
 class Enemy:
     def __init__(self, stage):
         self.x = 1300
+        self.stage = stage
         if stage == 1:
             self.health = 150
             self.color = 'green'
-            self.size = 50
+            self.size = 100
         elif stage == 2:
             self.health = 300
             self.color = 'black'
-            self.size = 100
+            self.size = 200
         elif stage == 3:
             self.health = 800
             self.color = 'red'
-            self.size = 200
+            self.size = 300
     def move(self):
-        if self.size == 50:
+        if self.size == 100:
             self.x -= 2
-        elif self.size == 100:
-            self.x -= 1.5
         elif self.size == 200:
+            self.x -= 1.5
+        elif self.size == 300:
             self.x -= 0.75
     def takeDamageReturnIsDead(self, dmg):
         self.health -= dmg
@@ -105,6 +94,7 @@ def onAppStart(app):
     # casted (damaging phase)
     # newStage (between enemies)
     # win
+    # lose
     app.calibrationTimer = 0
     app.castedTimer = 0
     app.startingTimer = 0
@@ -127,6 +117,10 @@ def onAppStart(app):
     app.frontTA = 'frontTA.jpeg'
     app.austin = 'austin.jpeg'
     app.koz = 'kosbie.jpeg'
+
+    # sets background image
+    '''The background image is from wallpapersden.com and is titled Hogwarts Harry Potter School Wallpaper'''
+    app.backgroundURL = 'hogwartsbgTiny.jpeg'
 
 def chooseSpell(app):
     index = random.randrange(len(app.spellList))
@@ -207,6 +201,8 @@ def onStep(app):
         app.position = capturePosition()
         app.path.append((app.position[0], app.position[1]))
         app.currentEnemy.move()
+        if app.currentEnemy.x <= 200:
+            app.state = 'lose'
         if app.position[2] > app.castDistance:
             app.state = 'casted'
 
@@ -241,17 +237,17 @@ def onStep(app):
 
 def redrawAll(app):
     # draws background of game
-    drawImage(app.backgroundURL, 0, 0, width = app.backgroundWidth, height = app.backgroundHeight)
+    drawImage(app.backgroundURL, 0, 0, width = app.width, height = app.height)
 
     if app.state == 'starting':
         drawLabel("Ready?", app.width/2, app.height/2, fill='blue', size=28)
         if app.currentEnemy != None:
-            if app.currentEnemy.size == 50:
-                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
-            elif app.currentEnemy.size == 100:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
-            elif app.currentEnemy.size == 200:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
@@ -263,23 +259,23 @@ def redrawAll(app):
         else:
             drawLabel("Perfect!", app.width/2, app.height/2, fill='green', size=28)
         if app.currentEnemy != None:
-            if app.currentEnemy.size == 50:
-                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
-            elif app.currentEnemy.size == 100:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
-            elif app.currentEnemy.size == 200:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
     elif app.state == 'casting':
         if app.currentEnemy != None:
-            if app.currentEnemy.size == 50:
-                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
-            elif app.currentEnemy.size == 100:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
-            elif app.currentEnemy.size == 200:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
         drawSpell(app)
         drawCircle(app.position[0], app.position[1], app.blueR, fill='blue')
         for x, y in app.path:
@@ -291,12 +287,12 @@ def redrawAll(app):
         drawLabel('Cast!', app.width/2, app.height/2, fill='blue', size=56)
         drawLabel(str(app.error), app.width/2, app.height/2 + 150, size=100, fill='purple')
         if app.currentEnemy != None:
-            if app.currentEnemy.size == 50:
-                drawImage(app.sideTA, app.currentEnemy.x, 750, width=100, height=100, align='bottom')
-            elif app.currentEnemy.size == 100:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=150, height=200)
-            elif app.currentEnemy.size == 200:
-                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom', width=300, height=300)
+            if app.currentEnemy.stage == 1:
+                drawImage(app.sideTA, app.currentEnemy.x, 750,
+                           width=app.currentEnemy.size, height=app.currentEnemy.size, align='bottom-left')
+            else:
+                drawImage(app.frontTA, app.currentEnemy.x, 750, align='bottom-left', 
+                          width=app.currentEnemy.size, height=app.currentEnemy.size)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
 
@@ -309,6 +305,9 @@ def redrawAll(app):
         drawLabel('You are win!', app.width/2, app.height/2, fill='orange', size=56)
         drawImage(app.austin, 0, 750, align='bottom-left', width=200, height=200)
         drawImage(app.koz, 0, 650, align='bottom-left', width=75, height=75)
+    
+    elif app.state == 'lose':
+        drawLabel('Game over :(', app.width/2, app.height/2, fill='orange', size=56)
 
 def main():
     runApp(1500, 850)
